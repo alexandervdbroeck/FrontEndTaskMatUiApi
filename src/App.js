@@ -17,6 +17,31 @@ export default class App extends Component {
       data: [],
     },
   };
+  getCat = (searchString) => {
+    this.setState({
+      ...this.state,
+      products: {
+        ...this.state.products,
+        loading: true,
+      },
+    });
+    axios
+      .get(
+        `https://api.spoonacular.com/recipes/search?${process.env.REACT_APP_SPOON_API_KEY}&query=${searchString}&number=20`
+      )
+      .then((results) => {
+        this.setState({
+          ...this.state,
+          category: {
+            data: { ...results },
+          },
+        });
+        console.log(results);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   render() {
     return (
