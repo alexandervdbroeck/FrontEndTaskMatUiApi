@@ -32,7 +32,7 @@ export default class SearchForm extends Component {
           error: false
         }
       });
-      this.props.getCat(this.state.searchField.value);
+      this.props.getRecipes("&query="+this.state.searchField.value);
     } else {
       this.setState({
         ...this.state,
@@ -51,7 +51,6 @@ export default class SearchForm extends Component {
           type="text"
           value={this.state.searchField.value}
           onChange={this.changeHandler}
-          className={this.state.searchField.error ? "error" : ""}
         />
         <input type="submit" value="search" />
       </form>

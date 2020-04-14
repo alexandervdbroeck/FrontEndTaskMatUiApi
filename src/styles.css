@@ -14,3 +14,10 @@ footer {
 
   height: 100px;
 }
+
+
+.active{
+  text-decoration: none;
+  color:gray;
+  font-weight: bold;
+}
