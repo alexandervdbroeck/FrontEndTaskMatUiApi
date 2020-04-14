@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import Home from "./components/homepage";
 import SearchResult from "./components/SearchResult";
 import SearchForm from "./components/SearchForm";
+import Detail from "./components/Detail";
 
 export default class App extends Component {
   state = {
@@ -16,6 +17,7 @@ export default class App extends Component {
       errorMessage: "",
       dataReceived: false,
       data: [],
+      steps: [],
     },
   };
 
@@ -84,8 +86,8 @@ export default class App extends Component {
           />
           <Route
             path="/recipe/:id/:title"
-            render={() => {
-              return <Home />;
+            render={(props) => {
+              return <Detail {...props} />;
             }}
           />
           >
