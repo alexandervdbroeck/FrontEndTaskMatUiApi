@@ -4,43 +4,58 @@ import axios from "axios";
 import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
-import Home from "./components/SearchForm";
+import Home from "./components/homepage";
+import SearchResult from "./components/SearchResult";
+import SearchForm from "./components/SearchForm";
+import Detail from "./components/Detail";
 
 export default class App extends Component {
   state = {
-    category: {
-      data: []
-    },
-    products: {
+    recipes: {
       loading: false,
       error: false,
-      data: []
-    }
+      errorMessage: "",
+      dataReceived: false,
+      data: [],
+      steps: [],
+    },
   };
-  getCat = searchString => {
+
+  getRecipes = (searchString) => {
     this.setState({
       ...this.state,
-      products: {
-        ...this.state.products,
-        loading: true
-      }
+      recipes: {
+        ...this.state.recipes,
+        loading: true,
+      },
     });
     axios
       .get(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${searchString}&type=video&key=AIzaSyDtXj-yp1hNNaASTmoVNPg0aQdp154kKb4`
+        `https://api.spoonacular.com/recipes/search?${process.env.REACT_APP_SPOON_API_KEY}${searchString}&number=2`
       )
-      .then(results => {
+      .then((results) => {
         this.setState({
           ...this.state,
-          category: {
-            data: { ...results }
-          }
+          recipes: {
+            ...this.state.recipes,
+            imgBaseUri: results.data.baseUri,
+            data: { ...results.data },
+            dataReceived: true,
+            loading: false,
+            error: false,
+            errorMessage: "",
+          },
         });
-        console.log(results.data.items);
-        // console.log(this.state.movies.data);
       })
-      .catch(error => {
-        console.log(error);
+      .catch((error) => {
+        this.setState({
+          ...this.state,
+          recipes: {
+            ...this.state.recipes,
+            error: true,
+            errorMessage: error,
+          },
+        });
       });
   };
 
@@ -48,7 +63,34 @@ export default class App extends Component {
     return (
       <Layout>
         <Switch>
-          <Route exact path="/" render={() => <Home getCat={this.getCat} />} />
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return <Home />;
+            }}
+          />
+          <Route
+            exact
+            path="/search"
+            render={() => {
+              return (
+                <>
+                  <SearchForm getRecipes={this.getRecipes} />
+                  {this.state.recipes.dataReceived && (
+                    <SearchResult test={this.state.recipes.data} />
+                  )}
+                </>
+              );
+            }}
+          />
+          <Route
+            path="/recipe/:id/:title"
+            render={(props) => {
+              return <Detail {...props} />;
+            }}
+          />
+          >
         </Switch>
       </Layout>
     );
