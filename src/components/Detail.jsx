@@ -90,15 +90,15 @@ export default class Detail extends Component{
     (<>
     <Grid container spacing={4}>
         {this.state.recipes.data.ingredients.map(ingr => (
-            <Grid item s={12} md={4} xl={2} key={ingr.id} >
+            <Grid item s={12} md={2} xl={2} key={ingr.id} >
                 <Card>
             <CardActionArea>
             <Typography gutterBottom variant="subtitle1" component="h2" >{ingr.name}</Typography>
                 <CardMedia
                 component="img"
-                width="50"
+                height="100"
                 src={basePicUri + ingr.image}
-                title="Menu pic" />
+                title="sorry no img" />
                 <CardContent>
     
     <Typography gutterBottom variant="subtitle1" component="h2" >{ingr.amount.metric.value} : {ingr.amount.metric.unit}</Typography>
