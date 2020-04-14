@@ -4,12 +4,14 @@ import Container from "@material-ui/core/Container";
 
 import Header from "./Header";
 import Footer from "./Footer";
+import Nav from "./Nav"
 
 export default props => {
   return (
     <Router>
       <Container maxWidth="md">
         <Header />
+        <Nav/>
         {props.children}
         <Footer />
       </Container>

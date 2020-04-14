@@ -4,42 +4,56 @@ import axios from "axios";
 import { Switch, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
-import Home from "./components/SearchForm";
+import Home from "./components/homepage";
+import SearchResult from "./components/SearchResult";
+import SearchForm from "./components/SearchForm";
 
 export default class App extends Component {
   state = {
-    category: {
-      data: [],
-    },
-    products: {
+    recipes: {
       loading: false,
       error: false,
+      errorMessage: "",
+      dataReceived: false,
       data: [],
     },
   };
-  getCat = (searchString) => {
+
+  getRecipes = (searchString) => {
     this.setState({
       ...this.state,
-      products: {
-        ...this.state.products,
+      recipes: {
+        ...this.state.recipes,
         loading: true,
       },
     });
     axios
       .get(
-        `https://api.spoonacular.com/recipes/search?${process.env.REACT_APP_SPOON_API_KEY}&query=${searchString}&number=20`
+        `https://api.spoonacular.com/recipes/search?${process.env.REACT_APP_SPOON_API_KEY}${searchString}&number=2`
       )
       .then((results) => {
         this.setState({
           ...this.state,
-          category: {
-            data: { ...results },
+          recipes: {
+            ...this.state.recipes,
+            imgBaseUri: results.data.baseUri,
+            data: { ...results.data },
+            dataReceived: true,
+            loading: false,
+            error: false,
+            errorMessage: "",
           },
         });
-        console.log(results);
       })
       .catch((error) => {
-        console.log(error);
+        this.setState({
+          ...this.state,
+          recipes: {
+            ...this.state.recipes,
+            error: true,
+            errorMessage: error,
+          },
+        });
       });
   };
 
@@ -47,7 +61,34 @@ export default class App extends Component {
     return (
       <Layout>
         <Switch>
-          <Route exact path="/" render={() => <Home getCat={this.getCat} />} />
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return <Home />;
+            }}
+          />
+          <Route
+            exact
+            path="/search"
+            render={() => {
+              return (
+                <>
+                  <SearchForm getRecipes={this.getRecipes} />
+                  {this.state.recipes.dataReceived && (
+                    <SearchResult test={this.state.recipes.data} />
+                  )}
+                </>
+              );
+            }}
+          />
+          <Route
+            path="/recipe/:id/:title"
+            render={() => {
+              return <Home />;
+            }}
+          />
+          >
         </Switch>
       </Layout>
     );
