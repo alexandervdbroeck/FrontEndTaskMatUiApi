@@ -82,6 +82,13 @@ export default class App extends Component {
               );
             }}
           />
+          <Route
+            path="/recipe/:id/:title"
+            render={() => {
+              return <Home />;
+            }}
+          />
+          >
         </Switch>
       </Layout>
     );
