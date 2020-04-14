@@ -9,7 +9,8 @@ import {
     CardContent,
     Typography,
     Button,
-    CardActions
+    CardActions,
+    Box
   } from "@material-ui/core";
 import {slugify} from "../helpers";
 const basePicUri = "https://spoonacular.com/cdn/ingredients_100x100/";
@@ -84,47 +85,76 @@ export default class Detail extends Component{
         // clean up the title
         const title = this.props.match.params.title.replace(/-/g," ");
     return(<>
-    <Typography variant="h2">{title}</Typography>
-    <Typography variant="subtitle1" >What do we need to get cooking </Typography>
+    <Box
+    borderBottom={1}>
+    <Typography variant="h3">{title}</Typography>
+    </Box>
+    <Box
+    pb={{ xs: 2, sm: 3, md: 4 }}
+    pt={{ xs: 2, sm: 3, md: 4 }}
+    >
+    <Typography variant="overline" >What do we need to get cooking </Typography>
+    </Box>
+
     {this.state.recipes.dataReceived && 
-    (<>
+    (<><Box
+      border={1} 
+      borderRadius="5px"
+      p={{ xs: 2, sm: 3, md: 4 }}>
     <Grid container spacing={4}>
         {this.state.recipes.data.ingredients.map(ingr => (
             <Grid item s={12} md={2} xl={2} key={ingr.id} >
                 <Card>
             <CardActionArea>
-            <Typography gutterBottom variant="subtitle1" component="h2" >{ingr.name}</Typography>
+            <Typography gutterBottom variant="subtitle1" component="h3" >{ingr.name}</Typography>
                 <CardMedia
                 component="img"
                 height="100"
                 src={basePicUri + ingr.image}
                 title="sorry no img" />
                 <CardContent>
-    
-    <Typography gutterBottom variant="subtitle1" component="h2" >{ingr.amount.metric.value} : {ingr.amount.metric.unit}</Typography>
+
+    <Typography gutterBottom variant="subtitle1" component="h3" >{ingr.amount.metric.value} : {ingr.amount.metric.unit}</Typography>
                 </CardContent>
             </CardActionArea>
         </Card>
     </Grid>
         ))}
-        </Grid>
-    
-    <h2>How to make this Delicious dish</h2>
-        <ol>{this.state.recipes.steps.map(steps => 
+        </Grid></Box>
+        <Box
+    pb={{ xs: 2, sm: 3, md: 4 }}
+    pt={{ xs: 2, sm: 3, md: 4 }}
+    >
+        <Typography variant="overline" >How to make this Delicious dish</Typography>
+        </Box>
+        <Box 
+        border={1} 
+        borderRadius="5px"
+        p={{ xs: 2, sm: 3, md: 4 }}
+        >        
+          <ol>{this.state.recipes.steps.map(steps => 
             (<li key={steps.id}>{steps.step}</li>))}
         </ol>
-    
-    <p>More recipes like this?</p>
-
+        </Box>
+        <Box
+    pb={{ xs: 2, sm: 3, md: 4 }}
+    pt={{ xs: 2, sm: 3, md: 4 }}
+    >
+        <Typography variant="overline" >More recipes like this?</Typography>
+        </Box>
+    <Box
+    border={1} 
+    borderRadius="5px"
+    p={{ xs: 2, sm: 3, md: 4 }}>
     <Grid container spacing={4}>
 
     {this.state.recipes.similar.map(recipe =>
-    (<Grid item s={12} md={4} xl={2} key={recipe.id} >
+    (<Grid item s={12} md={2} xl={2} key={recipe.id} >
         <Card>
             <CardActionArea>
                 <CardMedia
                 component="img"
-                width="100"
+                height="100"
                 src={basePicRecipesUri + recipe.image}
                 title="Menu pic" />
                 <CardContent>
@@ -139,7 +169,7 @@ export default class Detail extends Component{
           </Link>
         </CardActions>
         </Card>
-    </Grid>))}</Grid></>)
+    </Grid>))}</Grid></Box></>)
         }</>)
     }
 }

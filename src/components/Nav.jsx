@@ -22,8 +22,13 @@ export default function Nav() {
   };
 
   return (
+    <Box
+    borderTop={1}
+
+    p={{ xs: 2, sm: 3, md: 4 }}>
     <Grid container 
     justify="center"
+    
     >
     <Grid item ><nav ><Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
     Open my fabulous Menu
@@ -41,6 +46,7 @@ export default function Nav() {
     <MenuItem onClick={handleClose}><NavLink to="/search" activeClassName="active">Search for amazing recipes</NavLink></MenuItem>
   </Menu></nav></Grid>
     </Grid>
+    </Box>
       
     
   );
