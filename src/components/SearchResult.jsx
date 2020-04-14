@@ -13,9 +13,9 @@ import {
 import {slugify} from "../helpers";
 
 export default  ({test:{results, baseUri}})=>(
-    <>{console.log(results)}
+    <>
     <Grid container spacing={4}>
-        {results.map(recipe => (<Grid item s={12} md={4} xl={2} key={recipe.id} >
+        {results.map(recipe => (<Grid item s={12} md={4} xl={4} key={recipe.id} >
             <Card>
                 <CardActionArea>
                     <CardMedia
