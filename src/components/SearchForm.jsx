@@ -58,7 +58,8 @@ export default class SearchForm extends Component {
               justify="space-around"
               alignItems="center">   
         <Grid item> <TextField type="text"
-          value={this.state.searchField.value}
+          value={this.state.searchField.value}  
+          error={this.state.searchField.error ? true : false}        
           onChange={this.changeHandler} id="outlined-basic" label="Search your dish here" variant="outlined" fullWidth/></Grid>
      <Box
       mt={{ xs: 2, sm: 3, md: 4 }}

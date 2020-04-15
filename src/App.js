@@ -8,6 +8,7 @@ import Home from "./components/homepage";
 import SearchResult from "./components/SearchResult";
 import SearchForm from "./components/SearchForm";
 import Detail from "./components/Detail";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 export default class App extends Component {
   state = {
@@ -31,7 +32,7 @@ export default class App extends Component {
     });
     axios
       .get(
-        `https://api.spoonacular.com/recipes/search?${process.env.REACT_APP_SPOON_API_KEY}${searchString}&number=2`
+        `https://api.spoonacular.com/recipes/search?${process.env.REACT_APP_SPOON_API_KEY}${searchString}&number=20`
       )
       .then((results) => {
         this.setState({
@@ -77,6 +78,13 @@ export default class App extends Component {
               return (
                 <>
                   <SearchForm getRecipes={this.getRecipes} />
+                  {/*loading message*/}
+                  {this.state.recipes.loading && (
+                    <div>
+                      <LinearProgress />
+                      <LinearProgress color="secondary" />
+                    </div>
+                  )}
                   {this.state.recipes.dataReceived && (
                     <SearchResult test={this.state.recipes.data} />
                   )}

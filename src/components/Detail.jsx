@@ -13,9 +13,7 @@ import {
     Box
   } from "@material-ui/core";
 import {slugify} from "../helpers";
-const basePicUri = "https://spoonacular.com/cdn/ingredients_100x100/";
-const basePicRecipesUri = "https://spoonacular.com/recipeImages/";
-
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 export default class Detail extends Component{
     state = {
@@ -48,6 +46,7 @@ export default class Detail extends Component{
             },
           });
 
+          //make api calls for the ingredients, the steps , end similar dishes 
           axios.all([requestOne, requestTwo, requestTree]).then(axios.spread((...responses) => {
             const responseOne = responses[0];
             const responseTwo = responses[1];
@@ -63,10 +62,12 @@ export default class Detail extends Component{
                   dataReceived : true,
                   error: false,
                   errorMessage: "",
+                  loading: false
                 },
 
               });
-            // use/access the results 
+
+            // all errors are collected
           })).catch(errors => {
             this.setState({
                 ...this.state,
@@ -82,94 +83,110 @@ export default class Detail extends Component{
 
       }
     render(){
-        // clean up the title
-        const title = this.props.match.params.title.replace(/-/g," ");
-    return(<>
-    <Box
-    borderBottom={1}>
-    <Typography variant="h3">{title}</Typography>
-    </Box>
-    <Box
-    pb={{ xs: 2, sm: 3, md: 4 }}
-    pt={{ xs: 2, sm: 3, md: 4 }}
-    >
-    <Typography variant="overline" >What do we need to get cooking </Typography>
-    </Box>
-
-    {this.state.recipes.dataReceived && 
-    (<><Box
-      border={1} 
-      borderRadius="5px"
-      p={{ xs: 2, sm: 3, md: 4 }}>
-    <Grid container spacing={4}>
-        {this.state.recipes.data.ingredients.map(ingr => (
-            <Grid item s={12} md={2} xl={2} key={ingr.id} >
-                <Card>
-            <CardActionArea>
-            <Typography gutterBottom variant="subtitle1" component="h3" >{ingr.name}</Typography>
-                <CardMedia
-                component="img"
-                height="100"
-                src={basePicUri + ingr.image}
-                title="sorry no img" />
-                <CardContent>
-
-    <Typography gutterBottom variant="subtitle1" component="h3" >{ingr.amount.metric.value} : {ingr.amount.metric.unit}</Typography>
-                </CardContent>
-            </CardActionArea>
-        </Card>
-    </Grid>
-        ))}
-        </Grid></Box>
+        // clean up the title from the uri
+      const title = this.props.match.params.title.replace(/-/g," ");
+        return(<>
         <Box
-    pb={{ xs: 2, sm: 3, md: 4 }}
-    pt={{ xs: 2, sm: 3, md: 4 }}
-    >
-        <Typography variant="overline" >How to make this Delicious dish</Typography>
+        borderBottom={1}>
+        <Typography variant="h3">{title}</Typography>
         </Box>
-        <Box 
+        <Box
+        pb={{ xs: 2, sm: 3, md: 4 }}
+        pt={{ xs: 2, sm: 3, md: 4 }}
+        >
+        <Typography variant="overline" >What do we need to get cooking </Typography>
+        </Box>
+
+        {/*loading message*/}  
+
+        {this.state.recipes.loading &&                     <div >
+                      <LinearProgress />
+                      <LinearProgress color="secondary" />
+                    </div>}
+
+
+        {/*result of ingredients */}
+         
+
+        {this.state.recipes.dataReceived && 
+        (<><Box
+          border={1} 
+          borderRadius="5px"
+          p={{ xs: 2, sm: 3, md: 4 }}>
+        <Grid container spacing={4}>
+            {this.state.recipes.data.ingredients.map(ingr => (
+                <Grid item s={12} md={2} xl={2} key={ingr.id} >
+                    <Card>
+                <CardActionArea>
+                <Typography gutterBottom variant="subtitle1" component="h3" >{ingr.name}</Typography>
+                    <CardMedia
+                    component="img"
+                    height="100"
+                    src={process.env.REACT_APP_URI_INGREDIENT + ingr.image}
+                    title="sorry no img" />
+                    <CardContent>
+
+        <Typography gutterBottom variant="subtitle1" component="h3" >{ingr.amount.metric.value} : {ingr.amount.metric.unit}</Typography>
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+        </Grid>
+            ))}
+            </Grid></Box>
+            <Box
+        pb={{ xs: 2, sm: 3, md: 4 }}
+        pt={{ xs: 2, sm: 3, md: 4 }}
+        >
+            {/*The cooking steps */}
+        
+
+            <Typography variant="overline" >How to make this Delicious dish</Typography>
+            </Box>
+            <Box 
+            border={1} 
+            borderRadius="5px"
+            p={{ xs: 2, sm: 3, md: 4 }}
+            >        
+              <ol>{this.state.recipes.steps.map(steps => 
+                (<li key={steps.id}>{steps.step}</li>))}
+            </ol>
+            </Box>
+            <Box
+        pb={{ xs: 2, sm: 3, md: 4 }}
+        pt={{ xs: 2, sm: 3, md: 4 }}
+        >
+            <Typography variant="overline" >More recipes like this?</Typography>
+            </Box>
+        <Box
         border={1} 
         borderRadius="5px"
-        p={{ xs: 2, sm: 3, md: 4 }}
-        >        
-          <ol>{this.state.recipes.steps.map(steps => 
-            (<li key={steps.id}>{steps.step}</li>))}
-        </ol>
-        </Box>
-        <Box
-    pb={{ xs: 2, sm: 3, md: 4 }}
-    pt={{ xs: 2, sm: 3, md: 4 }}
-    >
-        <Typography variant="overline" >More recipes like this?</Typography>
-        </Box>
-    <Box
-    border={1} 
-    borderRadius="5px"
-    p={{ xs: 2, sm: 3, md: 4 }}>
-    <Grid container spacing={4}>
+        p={{ xs: 2, sm: 3, md: 4 }}>
+        <Grid container spacing={4}>
 
-    {this.state.recipes.similar.map(recipe =>
-    (<Grid item s={12} md={2} xl={2} key={recipe.id} >
-        <Card>
-            <CardActionArea>
-                <CardMedia
-                component="img"
-                height="100"
-                src={basePicRecipesUri + recipe.image}
-                title="Menu pic" />
-                <CardContent>
-    <Typography gutterBottom variant="subtitle1" component="h2" >{recipe.title}</Typography>
-                </CardContent>
-            </CardActionArea>
-            <CardActions>
-          <Link to={`/recipe/${recipe.id}/${slugify(recipe.title)}`}>
-            <Button size="small" color="primary">
-              Go and cook this fabulous dish
-            </Button>
-          </Link>
-        </CardActions>
-        </Card>
-    </Grid>))}</Grid></Box></>)
-        }</>)
+          {/* get similar dishes */}
+
+        {this.state.recipes.similar.map(recipe =>
+        (<Grid item s={12} md={2} xl={2} key={recipe.id} >
+            <Card>
+                <CardActionArea>
+                    <CardMedia
+                    component="img"
+                    height="100"
+                    src={process.env.REACT_APP_URI_RECIPES + recipe.image}
+                    title="Menu pic" />
+                    <CardContent>
+        <Typography gutterBottom variant="subtitle1" component="h2" >{recipe.title}</Typography>
+                    </CardContent>
+                </CardActionArea>
+                <CardActions>
+              <Link to={`/recipe/${recipe.id}/${slugify(recipe.title)}`}>
+                <Button size="small" color="primary">
+                  Go and cook this fabulous dish
+                </Button>
+              </Link>
+            </CardActions>
+            </Card>
+        </Grid>))}</Grid></Box></>)
+            }</>)
+        }
     }
-}

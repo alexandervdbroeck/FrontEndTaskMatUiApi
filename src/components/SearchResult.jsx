@@ -20,6 +20,8 @@ export default  ({test:{results, baseUri}})=>(
     borderRadius="5px"
     p={{ xs: 2, sm: 3, md: 4 }}>
     <Grid container spacing={4}>
+
+      // the recipes 
         {results.map(recipe => (<Grid item s={12} md={4} xl={4} key={recipe.id} >
             <Card>
                 <CardActionArea>
